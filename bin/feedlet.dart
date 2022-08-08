@@ -10,10 +10,11 @@ Future<void> main() async {
   teledart.start();
   Timer.periodic(updateInterval, (_) => fetchAll());
 
-  teledart.onUrl().listen((message) {
+  teledart.onUrl().listen((message) async {
     final url = Uri.tryParse(message.text!);
     if (url != null) {
       final feed = Feed(url);
+      if (!await feed.validate()) return;
       users.add(User(message.chat.id));
       final user = users.singleWhere((user) => user.id == message.chat.id);
       if (!user.subscriptions.containsKey(feed)) {

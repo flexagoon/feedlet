@@ -35,6 +35,18 @@ class Feed {
     items.forEach(_streamController.add);
   }
 
+  Future<bool> validate() async {
+    final response = await http.get(url);
+
+    try {
+      RssFeed.parse(response.body);
+    } on Exception {
+      return false;
+    }
+
+    return true;
+  }
+
   @override
   int get hashCode => url.hashCode;
 
