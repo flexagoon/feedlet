@@ -8,6 +8,7 @@ import 'package:webfeed/webfeed.dart';
 
 final _box = Hive.box<List<dynamic>>('cache');
 
+// TODO: Support Atom feeds.
 class Feed {
   final String url;
   final StreamController<RssItem> _streamController;
