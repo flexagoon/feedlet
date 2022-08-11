@@ -4,8 +4,7 @@ A Telegram bot for subscribing to RSS feeds.
 
 # THIS IS A WORK IN PROGRESS
 
-The bot currently only shows titles of RSS items, contains a lot of bugs, and
-may crash. It is not usable in its current state.
+The bot currently does not support Atom feeds.
 
 # Token
 
