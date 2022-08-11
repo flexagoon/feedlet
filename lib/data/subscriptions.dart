@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:feedlet/feedlet.dart';
+import 'package:feedlet/src/helpers/build_subscription.dart';
 import 'package:hive/hive.dart';
 import 'package:webfeed/webfeed.dart';
 
@@ -21,8 +22,7 @@ class Subscriptions {
       // ignore: parameter_assignments
       feed = Feed.getInstance(feed.url);
     }
-    final subscription =
-        feed.stream.listen((item) => bot.sendMessage(userId, item.title!));
+    final subscription = buildSubscription(feed, userId);
     _subscriptions.update(
       userId,
       (subscriptions) => subscriptions
