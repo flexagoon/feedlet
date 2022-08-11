@@ -1,27 +1,34 @@
 import 'dart:async';
 
 import 'package:feedlet/feedlet.dart';
-import 'package:feedlet/sot.dart';
+import 'package:feedlet/src/models/cached_rss_item.dart';
+import 'package:hive/hive.dart';
 
 Future<void> main() async {
+  Hive
+    ..init('database')
+    ..registerAdapter(CachedRssItemAdapter());
+  await Hive.openBox<List<String>>('subscriptions');
+  await Hive.openBox<List<dynamic>>('cache');
+
+  final subscriptions = Subscriptions();
+
   const updateInterval = Duration(seconds: 10);
 
-  await initDatabase();
-  teledart.start();
+  bot.start();
   Timer.periodic(updateInterval, (_) => fetchAll());
 
-  teledart.onUrl().listen((message) async {
-    final url = Uri.tryParse(message.text!);
+  bot.onUrl().listen((message) async {
+    final url = Uri.tryParse(message.text!)?.toString();
     if (url != null) {
       final feed = Feed(url);
       if (!await feed.validate()) return;
-      users.add(User(message.chat.id));
-      final user = users.singleWhere((user) => user.id == message.chat.id);
-      if (!user.subscriptions.containsKey(feed)) {
-        user.subscribe(feed);
+      final userSubscriptions = subscriptions.state[message.chat.id] ?? {};
+      if (!userSubscriptions.containsKey(url)) {
+        subscriptions.add(message.chat.id, feed);
         message.reply('Subscribed to $url');
       } else {
-        user.unsubscribe(feed);
+        subscriptions.remove(message.chat.id, feed);
         message.reply('Unsubscribed from $url');
       }
     }
