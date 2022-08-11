@@ -3,11 +3,11 @@ import 'dart:collection';
 
 import 'package:feedlet/feedlet.dart';
 import 'package:feedlet/src/helpers/build_subscription.dart';
+import 'package:feedlet/src/models/feed_item.dart';
 import 'package:hive/hive.dart';
-import 'package:webfeed/webfeed.dart';
 
 final _box = Hive.box<List<String>>('subscriptions');
-final _subscriptions = <int, Map<String, StreamSubscription<RssItem>>>{};
+final _subscriptions = <int, Map<String, StreamSubscription<FeedItem>>>{};
 
 class Subscriptions {
   final state = UnmodifiableMapView(_subscriptions);
@@ -52,8 +52,7 @@ class Subscriptions {
         if (!feeds.add(feed)) {
           feed = Feed.getInstance(feed.url);
         }
-        final subscription =
-            feed.stream.listen((item) => bot.sendMessage(userId, item.title!));
+        final subscription = buildSubscription(feed, userId);
         _subscriptions.putIfAbsent(userId, () => {url: subscription});
       }
     }

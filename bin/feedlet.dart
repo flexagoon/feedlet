@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:feedlet/feedlet.dart';
-import 'package:feedlet/src/models/cached_rss_item.dart';
+import 'package:feedlet/src/models/cached_feed_item.dart';
 import 'package:hive/hive.dart';
 
 Future<void> main() async {
   Hive
     ..init('database')
-    ..registerAdapter(CachedRssItemAdapter());
+    ..registerAdapter(CachedFeedItemAdapter());
   await Hive.openBox<List<String>>('subscriptions');
   await Hive.openBox<List<dynamic>>('cache');
 

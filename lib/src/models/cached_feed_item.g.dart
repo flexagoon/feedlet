@@ -1,29 +1,29 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'cached_rss_item.dart';
+part of 'cached_feed_item.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class CachedRssItemAdapter extends TypeAdapter<CachedRssItem> {
+class CachedFeedItemAdapter extends TypeAdapter<CachedFeedItem> {
   @override
   final int typeId = 1;
 
   @override
-  CachedRssItem read(BinaryReader reader) {
+  CachedFeedItem read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return CachedRssItem(
+    return CachedFeedItem(
       guid: fields[0] as String?,
       title: fields[1] as String?,
     );
   }
 
   @override
-  void write(BinaryWriter writer, CachedRssItem obj) {
+  void write(BinaryWriter writer, CachedFeedItem obj) {
     writer
       ..writeByte(2)
       ..writeByte(0)
@@ -38,7 +38,7 @@ class CachedRssItemAdapter extends TypeAdapter<CachedRssItem> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is CachedRssItemAdapter &&
+      other is CachedFeedItemAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
