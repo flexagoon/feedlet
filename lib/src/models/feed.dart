@@ -31,13 +31,6 @@ class Feed {
   Future<void> fetch() async {
     final response = await http.get(Uri.parse(url));
     final feed = ParsedFeed(response.body);
-    for (final item in feed.items) {
-      print(item.date);
-      print(item.date.millisecondsSinceEpoch);
-      print(_lastFetched);
-      print(_lastFetched.millisecondsSinceEpoch);
-      print(item.date.isAfter(_lastFetched));
-    }
     feed.items
         .where((item) => item.date.isAfter(_lastFetched))
         .toList()
