@@ -36,4 +36,16 @@ Future<void> main() async {
       message.reply('Invalid feed!');
     }
   });
+
+  bot.onCommand('subscriptions').listen((message) async {
+    final userSubscriptions = subscriptions.state[message.chat.id] ?? {};
+    if (userSubscriptions.isEmpty) return;
+    var messageText = '';
+    for (final url in userSubscriptions.keys) {
+      final feed = Feed.getInstance(url);
+      final title = await feed.getTitle();
+      messageText += '$title: ${feed.url}\n';
+    }
+    message.reply(messageText);
+  });
 }

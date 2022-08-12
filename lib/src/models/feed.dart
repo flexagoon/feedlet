@@ -25,6 +25,13 @@ class Feed {
 
   Stream<FeedItem> get stream => _streamController.stream;
 
+  Future<String?> getTitle() async {
+    final response = await http.get(Uri.parse(url));
+    final feed = ParsedFeed(response.body);
+
+    return feed.title;
+  }
+
   @override
   bool operator ==(Object other) => other is Feed && url == other.url;
 
@@ -55,7 +62,7 @@ class Feed {
     var feed = Feed._fromUrl(url);
 
     if (!feeds.add(feed)) {
-      feed = feeds.singleWhere((f) => f.url == url);
+      feed = getInstance(url);
     }
 
     return feed;
@@ -67,9 +74,11 @@ class Feed {
     if (!await feed._validate()) return null;
 
     if (!feeds.add(feed)) {
-      feed = feeds.singleWhere((f) => f.url == url);
+      feed = getInstance(url);
     }
 
     return feed;
   }
+
+  static Feed getInstance(String url) => feeds.singleWhere((f) => f.url == url);
 }

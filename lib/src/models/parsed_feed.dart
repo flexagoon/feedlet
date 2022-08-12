@@ -2,11 +2,13 @@ import 'package:feedlet/src/models/feed_item.dart';
 import 'package:webfeed/webfeed.dart';
 
 class ParsedFeed {
+  String? title;
   List<FeedItem> items = [];
 
   ParsedFeed(String xmlString) {
     try {
       final feed = RssFeed.parse(xmlString);
+      title = feed.title;
       items = (feed.items ?? [])
           .map(
             (item) => FeedItem(
@@ -19,6 +21,7 @@ class ParsedFeed {
           .toList();
     } catch (_) {
       final feed = AtomFeed.parse(xmlString);
+      title = feed.title;
       items = (feed.items ?? [])
           .map(
             (item) => FeedItem(
