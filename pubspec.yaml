@@ -1,6 +1,6 @@
 name: feedlet
 description: A Telegram bot for subscribing to RSS feeds.
-version: 0.0.1
+version: 0.1.0
 
 environment:
   sdk: ">=2.17.3 <3.0.0"
