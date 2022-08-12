@@ -18,7 +18,7 @@ Future<void> main() async {
   bot.onUrl().listen((message) async {
     final url = Uri.tryParse(message.text!)?.toString();
     if (url != null) {
-      final feed = Feed(url);
+      final feed = Feed.create(url);
       if (!await feed.validate()) return;
       final userSubscriptions = subscriptions.state[message.chat.id] ?? {};
       if (!userSubscriptions.containsKey(url)) {

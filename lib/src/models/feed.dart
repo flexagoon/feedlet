@@ -14,10 +14,10 @@ class Feed {
 
   DateTime _lastFetched;
 
-  Feed(this.url)
+  Feed._fromUrl(this.url)
       : _lastFetched = DateTime.fromMillisecondsSinceEpoch(_box.get(url) ?? 0),
         _streamController = StreamController<FeedItem>.broadcast(
-          onCancel: () => feeds.remove(Feed(url)),
+          onCancel: () => feeds.remove(Feed._fromUrl(url)),
         );
 
   @override
@@ -58,5 +58,13 @@ class Feed {
     return true;
   }
 
-  static Feed getInstance(String url) => feeds.singleWhere((f) => f.url == url);
+  static Feed create(String url) {
+    var feed = Feed._fromUrl(url);
+
+    if (!feeds.add(feed)) {
+      feed = feeds.singleWhere((f) => f.url == url);
+    }
+
+    return feed;
+  }
 }

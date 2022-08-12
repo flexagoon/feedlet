@@ -17,11 +17,6 @@ class Subscriptions {
   }
 
   void add(int userId, Feed feed) {
-    if (!feeds.add(feed)) {
-      // Avoid creating duplicate streams.
-      // ignore: parameter_assignments
-      feed = Feed.getInstance(feed.url);
-    }
     final subscription = buildSubscription(feed, userId);
     _subscriptions.update(
       userId,
@@ -47,11 +42,7 @@ class Subscriptions {
     for (int userId in _box.keys) {
       final subscriptions = _box.get(userId)!;
       for (final url in subscriptions) {
-        // TODO: refactor this.
-        var feed = Feed(url);
-        if (!feeds.add(feed)) {
-          feed = Feed.getInstance(feed.url);
-        }
+        final feed = Feed.create(url);
         final subscription = buildSubscription(feed, userId);
         _subscriptions.putIfAbsent(userId, () => {url: subscription});
       }
