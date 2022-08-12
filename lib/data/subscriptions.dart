@@ -44,7 +44,11 @@ class Subscriptions {
       for (final url in subscriptions) {
         final feed = Feed.create(url);
         final subscription = buildSubscription(feed, userId);
-        _subscriptions.putIfAbsent(userId, () => {url: subscription});
+        _subscriptions.update(
+          userId,
+          (current) => current..putIfAbsent(url, () => subscription),
+          ifAbsent: () => {url: subscription},
+        );
       }
     }
   }
