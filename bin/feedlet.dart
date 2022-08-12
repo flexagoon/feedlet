@@ -39,13 +39,16 @@ Future<void> main() async {
 
   bot.onCommand('subscriptions').listen((message) async {
     final userSubscriptions = subscriptions.state[message.chat.id] ?? {};
-    if (userSubscriptions.isEmpty) return;
-    var messageText = '';
-    for (final url in userSubscriptions.keys) {
-      final feed = Feed.getInstance(url);
-      final title = await feed.getTitle();
-      messageText += '$title: ${feed.url}\n';
+    if (userSubscriptions.isNotEmpty) {
+      var messageText = '';
+      for (final url in userSubscriptions.keys) {
+        final feed = Feed.getInstance(url);
+        final title = await feed.getTitle();
+        messageText += '$title: ${feed.url}\n';
+      }
+      message.reply(messageText);
+    } else {
+      message.reply('You don\'t have any subscriptions!');
     }
-    message.reply(messageText);
   });
 }
