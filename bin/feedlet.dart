@@ -18,8 +18,12 @@ Future<void> main() async {
   bot.onUrl().listen((message) async {
     final url = Uri.tryParse(message.text!)?.toString();
     if (url != null) {
-      final feed = Feed.create(url);
-      if (!await feed.validate()) return;
+      final feed = await Feed.createSafe(url);
+      if (feed == null) {
+        message.reply('Invalid feed!');
+
+        return;
+      }
       final userSubscriptions = subscriptions.state[message.chat.id] ?? {};
       if (!userSubscriptions.containsKey(url)) {
         subscriptions.add(message.chat.id, feed);
@@ -28,6 +32,8 @@ Future<void> main() async {
         subscriptions.remove(message.chat.id, feed);
         message.reply('Unsubscribed from $url');
       }
+    } else {
+      message.reply('Invalid feed!');
     }
   });
 }

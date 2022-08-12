@@ -39,7 +39,7 @@ class Feed {
     _box.put(url, _lastFetched.millisecondsSinceEpoch);
   }
 
-  Future<bool> validate() async {
+  Future<bool> _validate() async {
     final response = await http.get(Uri.parse(url));
 
     try {
@@ -53,6 +53,18 @@ class Feed {
 
   static Feed create(String url) {
     var feed = Feed._fromUrl(url);
+
+    if (!feeds.add(feed)) {
+      feed = feeds.singleWhere((f) => f.url == url);
+    }
+
+    return feed;
+  }
+
+  static Future<Feed?> createSafe(String url) async {
+    var feed = Feed._fromUrl(url);
+
+    if (!await feed._validate()) return null;
 
     if (!feeds.add(feed)) {
       feed = feeds.singleWhere((f) => f.url == url);
