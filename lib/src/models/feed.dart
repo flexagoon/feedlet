@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:feedlet/data/feeds.dart';
+import 'package:feedlet/src/helpers/fix_encoding.dart';
 import 'package:feedlet/src/models/feed_item.dart';
 import 'package:feedlet/src/models/parsed_feed.dart';
 import 'package:hive/hive.dart';
@@ -37,7 +38,20 @@ class Feed {
 
   Future<void> fetch() async {
     final response = await http.get(Uri.parse(url));
-    final feed = ParsedFeed(response.body);
+
+    var xml = response.body;
+    if (response.headers.containsKey('Content-Type')) {
+      final regex = RegExp(r'charset=([^()<>@,;:\"/[\]?.=\s]*)');
+      final contentType = response.headers['Content-Type']!;
+      final charset = regex.firstMatch(contentType)?.group(1) ?? '';
+      xml = fixEncoding(response.bodyBytes, charset);
+    } else {
+      final regex = RegExp('encoding="(.*)"');
+      final charset = regex.firstMatch(response.body)?.group(1) ?? '';
+      xml = fixEncoding(response.bodyBytes, charset);
+    }
+
+    final feed = ParsedFeed(xml);
     feed.items
         .where((item) => item.date.isAfter(_lastFetched))
         .toList()
