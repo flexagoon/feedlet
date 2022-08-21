@@ -45,8 +45,8 @@ const _encodings = {
 };
 
 String fixEncoding(Uint8List bytes, String oldEncoding) {
-  final encoder = _encodings[oldEncoding];
-  if (encoder == null) return Utf8Decoder().convert(bytes);
+  final decoder = _encodings[oldEncoding];
+  if (decoder == null) return Utf8Decoder().convert(bytes);
 
-  return encoder.convert(bytes);
+  return decoder.convert(bytes);
 }
