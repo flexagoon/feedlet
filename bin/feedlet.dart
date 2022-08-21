@@ -15,6 +15,13 @@ Future<void> main() async {
   bot.start();
   Timer.periodic(updateInterval, (_) => fetchAll());
 
+  bot.onCommand('start').listen(
+        (message) => message.reply(
+          'Send me a link to a feed to subscribe to it. '
+          'Send the same link again to unsubscribe.',
+        ),
+      );
+
   bot.onUrl().listen((message) async {
     final url = Uri.tryParse(message.text!)?.toString();
     if (url != null) {
