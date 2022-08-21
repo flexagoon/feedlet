@@ -40,9 +40,10 @@ class Feed {
     final response = await http.get(Uri.parse(url));
 
     var xml = response.body;
-    if (response.headers.containsKey('Content-Type')) {
+    if (response.headers.containsKey('content-type') &&
+        response.headers['content-type']!.contains('charset')) {
       final regex = RegExp(r'charset=([^()<>@,;:\"/[\]?.=\s]*)');
-      final contentType = response.headers['Content-Type']!;
+      final contentType = response.headers['content-type']!;
       final charset = regex.firstMatch(contentType)?.group(1) ?? '';
       xml = fixEncoding(response.bodyBytes, charset);
     } else {
